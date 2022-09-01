@@ -25,7 +25,6 @@ function dev_dump () {
     
 }
 
-
 if [ "$total_dev" ==  "0" ]
 then
     echo -e "\e[91;1mNO DEVICE CONNECTED"
