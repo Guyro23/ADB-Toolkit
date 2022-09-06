@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-read -p $'\e[93;1m\nDo you want to clear the screen \e[1;97m (y/N) \e[93;1m? : \e[1;91m' yn
+read -rp $'\e[93;1m\nDo you want to clear the screen \e[1;97m (Y/n) \e[93;1m? : \e[1;91m' yn
 case $yn in
-    [Yy]* ) clear; bash modules/function.sh;;
     [Nn]* ) bash modules/function.sh;;
-    * ) bash modules/function.sh;;
+    * ) clear; bash modules/function.sh;;
 esac

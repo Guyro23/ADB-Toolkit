@@ -3,21 +3,18 @@
 #Total device count setting to zero initially
 total_dev=0
 
-dev=$(adb devices | sed -n '2,$p' | awk '{ print $1 }' 2> /dev/null)
+dev=$(adb devices | sed -n '2,$p' | awk '{ print $1 }' 2>/dev/null)
 
-if [ "$dev" != "" ];
-then
+if [ "$dev" != "" ]; then
     total_dev=${#dev[@]}
 fi
 
-if ((total_dev >= 1));
-then
-    for (( i=0; i<${total_dev}; i++ ));
-    do
-        devcode=$(echo ${dev[$i]} | awk '{print $1}')
-        modelname=$(adb -s "$devcode" shell getprop ro.product.model | sed  's/ /_/g')
-        dev[$i]=$(echo "$devcode $modelname")
+if ((total_dev >= 1)); then
+    for ((i = 0; i < total_dev; i++)); do
+        devcode=$(echo "${dev[$i]}" | awk '{print $1}')
+        modelname=$(adb -s "$devcode" shell getprop ro.product.model | sed 's/ /_/g')
+        dev[$i]="$devcode $modelname"
     done
 fi
 
-echo -e $dev
+echo -e "${dev[@]}"
