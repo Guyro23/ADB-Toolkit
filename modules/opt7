@@ -21,7 +21,7 @@ function dev_dump() {
     adb -s "$devcode" shell dumpsys 2>/dev/null >sys-dump-info/"$modelname"-"$time".dump &
     echo -e "\e[1;92mPress q to stop in viewing\n"
     sleep 2s && echo -e "THE DEVICE IS INITIALIZING WAIT\e[0m"
-    cat "sys-dump-info/$modelname-$time.dump" < less
+    cat "sys-dump-info/$modelname-$time.dump" <less
 
 }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-adb kill-server >/dev/null 2>&1 | echo -e "\n\e[1;91mKilling the ADB Server."
-adb start-server >/dev/null 2>&1 | echo -e "\n\e[1;92mStarting a new ADB Server."
+echo -e "\n\e[1;91mKilling the ADB Server." && adb kill-server >/dev/null 2>&1
+echo -e "\n\e[1;92mStarting a new ADB Server." && adb start-server >/dev/null 2>&1
 
 ## Asking to Clear the screen
 bash modules/HelperFunctions/AskClear

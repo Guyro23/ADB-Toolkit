@@ -6,21 +6,18 @@ total_dev=0
 ## DEVICE ID & MODEL EXTARCT ##
 dev=$(bash modules/HelperFunctions/GetDevices)
 
-if [ "$dev" != "" ];
-then
+if [ "$dev" != "" ]; then
     total_dev=${#dev[@]}
 fi
 
 echo -e "\e[93mThe available devices are :- \e[92m\n"
 
-if [ "$total_dev" ==  "0" ]
-then
+if [ "$total_dev" == "0" ]; then
     echo -e "\e[91;1mNO DEVICE CONNECTED"
 else
-    for (( i=0; i<${total_dev}; i++ ));
-    do
-        devcode=$(echo ${dev[$i]} | awk '{print $1}')
-        modelname=$(echo ${dev[$i]} | awk '{print $2}')
+    for ((i = 0; i < total_dev; i++)); do
+        devcode=$(echo "${dev[$i]}" | awk '{print $1}')
+        modelname=$(echo "${dev[$i]}" | awk '{print $2}')
         echo -e "\e[93m1. \e[92m $devcode, \e[93mModel : \e[92m$modelname "
     done
 fi
@@ -29,4 +26,3 @@ echo -e "\n\e[93mThe total devices are :- \e[91m$total_dev\n"
 
 ## Asking to Clear the screen
 bash modules/HelperFunctions/AskClear
-

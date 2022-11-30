@@ -18,7 +18,7 @@ properties=""
 function get_prop_details () {
     
     prop=$(echo "$properties" | grep "$1" | awk '{$1= ""; print $0}' | xargs | sed 's/\[//' | sed 's/\]//')
-    echo $prop
+    echo "$prop"
     
 }
 
@@ -46,7 +46,7 @@ function dev_info () {
     devcode=$1
     modelname=$2
     
-    properties=$(adb -s $devcode shell getprop)
+    properties=$(adb -s "$devcode" shell getprop)
     
     model=$(get_prop_details "ro.product.model")
     brand=$(get_prop_details "ro.product.vendor.brand")
@@ -64,9 +64,9 @@ function dev_info () {
     
     while true; do
         time=$(date +"%T")
-        read -p $'\e[93;1mDo you want to see all the Details\e[1;97m (Y/N) \e[93;1m? : \e[1;91m' yn
+        read -rp $'\e[93;1mDo you want to see all the Details\e[1;97m (Y/N) \e[93;1m? : \e[1;91m' yn
         case $yn in
-            [Yy]* ) echo ;echo -e "\e[1;93m"; adb -s "$devcode" shell getprop > "sys-dump-info/$modelname-details-$time.log"  ; sleep 1s | echo -e "THE DEVICE IS INITIALIZING WAIT"; cat "sys-dump-info/$modelname-details-$time.log" | less; break ;;
+            [Yy]* ) echo ;echo -e "\e[1;93m"; adb -s "$devcode" shell getprop > "sys-dump-info/$modelname-details-$time.log"  ; echo -e "THE DEVICE IS INITIALIZING WAIT" && sleep 1s; < "sys-dump-info/$modelname-details-$time.log" less; break ;;
             [Nn]* ) break;;
             * ) echo -e "\e[1;93mPlease answer it with\e[1;97m ( Y/N )\e[0m";;
         esac
@@ -81,8 +81,8 @@ else
     if [ "$total_dev" == "1" ]
     then
         
-        devcode=$(echo ${dev[0]} | awk '{print $1}')
-        modelname=$(echo ${dev[0]} | awk '{print $2}')
+        devcode=$(echo "${dev[0]}" | awk '{print $1}')
+        modelname=$(echo "${dev[0]}" | awk '{print $2}')
         
         echo -e "\e[93m1. \e[92m$devcode , \e[93mModel : \e[92m$modelname"
         dev_info "$devcode" "$modelname"
@@ -91,22 +91,22 @@ else
         
         echo -e "\e[93mSelect the device to get the details :- \e[92m\n"
         
-        for (( i=0; i<${total_dev}; i++ ));
+        for (( i=0; i<total_dev; i++ ));
         do
-            devcode=$(echo ${dev[$i]} | awk '{print $1}')
-            modelname=$(echo ${dev[$i]} | awk '{print $2}')
+            devcode=$(echo "${dev[$i]}" | awk '{print $1}')
+            modelname=$(echo "${dev[$i]}" | awk '{print $2}')
             echo -e "\e[93m1. \e[92m $devcode, \e[93mModel : \e[92m$modelname "
         done
         
-        while [ 1 ]; do
+        while true; do
             
-            read -p $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
+            read -rp $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
             [[ $options =~ ^[0-9]+$ ]] || { echo -e "\e[93m\nEnter a valid number"; continue; }
-            if ((options  >= 1 && options <= $total_dev));
+            if ((options  >= 1 && options <= total_dev));
             then
                 
-                devcode=$(echo ${dev[$options-1]} | awk '{print $1}')
-                modelname=$(echo ${dev[$options-1]} | awk '{print $2}')
+                devcode=$(echo "${dev[$options-1]}" | awk '{print $1}')
+                modelname=$(echo "${dev[$options-1]}" | awk '{print $2}')
                 
                 dev_info "$devcode" "$modelname"
                 

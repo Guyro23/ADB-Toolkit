@@ -75,8 +75,9 @@ function opt_install () {
         clear -x
         chmod +x ADB-Toolkit.sh
         touch ~/.bash_aliases 2> /dev/null
-        mkdir $PWD/.temp 2> /dev/null
+        mkdir "$PWD"/.temp 2> /dev/null
         echo "alias adb-toolkit='cd $PWD && sudo bash ADB-Toolkit.sh'" >> ~/.bash_aliases
+
         source ~/.bash_aliases
         echo -e "\n\e[1;92mINSTALLATION COMPLETED\n"
         echo -e "\e[1;92mUSAGE = \e[1;91m'sudo ./ADB-Toolkit.sh' or you can do 'sudo adb-tookit' from anywhere in shell\e[0m\n\n"
