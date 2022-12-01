@@ -6,27 +6,24 @@ total_dev=0
 ## DEVICE ID & MODEL EXTARCT ##
 dev=$(bash modules/HelperFunctions/GetDevices)
 
-if [ "$dev" != "" ];
-then
+if [ "$dev" != "" ]; then
     total_dev=${#dev[@]}
 fi
 
 #### DEVICE CHECK ####
 
-function if_file_exist_in_dev () {
-    
+function if_file_exist_in_dev() {
+
+    devicecode=$1 
     echo -e "\n\e[1;93mDon't include \e[1;92m/sdcard/\e[1;93m , Example :- \e[1;92mDownload/ashwini.pdf]\n"
-    while [ 1 ]
-    do
-        read -p $'\e[1;93mEnter the path in which you want to put in device : \e[0m' file_to_copy_path_dev
-        if [ "$file_to_copy_path_dev" == "" ]
-        then
+    while true; do
+        read -rp $'\e[1;93mEnter the path in which you want to put in device : \e[0m' file_to_copy_path_dev
+        if [ "$file_to_copy_path_dev" == "" ]; then
             echo -e "\e[91mPlease enter the path name plz....\n"
             if_file_exist_in_dev
         else
-            tmp_chke=$(echo "if [ -d /sdcard/$file_to_copy_path_dev ]; then echo '0'; else echo '1'; fi" | adb -s $devvv shell)
-            if [ "$tmp_chke" == "0" ]
-            then
+            tmp_chke=$(echo "if [ -d /sdcard/$file_to_copy_path_dev ]; then echo '0'; else echo '1'; fi" | adb -s "$devicecode" shell)
+            if [ "$tmp_chke" == "0" ]; then
                 file_to_copy=0
                 break
             else
@@ -34,163 +31,161 @@ function if_file_exist_in_dev () {
                 if_file_exist_in_dev
             fi
         fi
-        
+
     done
-    
+
 }
 
-function if_dir_exist_in_dev () {
-    
+function if_dir_exist_in_dev() {
+
+    devicecode=$1
     echo -e "\n\e[1;93mDon't include \e[1;92m/sdcard/\e[1;93m , Example :- \e[1;92mDownload/ashwini.pdf]\n"
-    while [ 1 ]
-    do
-        read -p $'\e[1;93mEnter the path in which you want to put in device : \e[0m' dir_to_copy_path_dev
-        if [ "$dir_to_copy_path_dev" == "" ]
-        then
+    while true; do
+        read -rp $'\e[1;93mEnter the path in which you want to put in device : \e[0m' dir_to_copy_path_dev
+        if [ "$dir_to_copy_path_dev" == "" ]; then
             echo -e "\e[91mPlease enter the path name plz....\n"
-            if_dir_exist_in_dev
+            if_dir_exist_in_dev "$devicecode"
         else
-            tmp_chkk=$(echo "if [ -d /sdcard/$dir_to_copy_path_dev ]; then echo '0'; else echo '1'; fi" | adb -s $devvv shell)
-            if [ "$tmp_chkk" == "0" ]
-            then
-                echo
+            tmp_chkk=$(echo "if [ -d /sdcard/$dir_to_copy_path_dev ]; then echo '0'; else echo '1'; fi" | adb -s "$devicecode" shell)
+            if [ "$tmp_chkk" == "0" ]; then
                 break
             else
                 echo -e "\e[91mPlease enter the right path name plz....\n"
-                if_dir_exist_in_dev
+                if_dir_exist_in_dev "$devicecode"
             fi
         fi
-        
+
     done
-    
+
 }
 
 #### SYSTEM CHECK ####
 
-function if_file_exist_in_sys () {
-    
+function if_file_exist_in_sys() {
+
+    devicecode=$1
+
     echo -e "\nExample :- \e[1;92m/home/User/Download/ashwini.pdf]\n"
-    while [ 1 ]
-    do
-        read -p $'\e[1;93mEnter the path of file which you want to push : \e[0m' file_to_copy_path
-        if [ "$file_to_copy_path" == "" ]
-        then
+    while true; do
+        read -rp $'\e[1;93mEnter the path of file which you want to push : \e[0m' file_to_copy_path
+        if [ "$file_to_copy_path" == "" ]; then
             echo -e "\e[91mPlease enter the path name plz....\n"
-            if_file_exist_in_sys
+            if_file_exist_in_sys "$devicecode"
         else
-            tmp_chk=$(if [ -f $file_to_copy_path ]; then echo '0'; else echo '1'; fi)
-            if [ "$tmp_chk" == "0" ]
-            then
-                if_file_exist_in_dev
+            tmp_chk=$(if [ -f "$file_to_copy_path" ]; then echo '0'; else echo '1'; fi)
+            if [ "$tmp_chk" == "0" ]; then
+                if_file_exist_in_dev "$devicecode"
                 break
             else
                 echo -e "\e[91mPlease enter the right path name plz....\n"
-                if_file_exist_in_sys
+                if_file_exist_in_sys "$devicecode"
             fi
         fi
-        
+
     done
-    
+
 }
 
-function if_dir_exist_in_sys () {
-    
+function if_dir_exist_in_sys() {
+
+    devicecode=$1
+
     echo -e "\nExample :- \e[1;92m/home/User/Download/]\n"
-    while [ 1 ]
-    do
-        read -p $'\e[1;93mEnter the path of directory which you want to push : \e[0m' dir_to_copy_path
-        if [ "$dir_to_copy_path" == "" ]
-        then
+    while true; do
+        read -rp $'\e[1;93mEnter the path of directory which you want to push : \e[0m' dir_to_copy_path
+        if [ "$dir_to_copy_path" == "" ]; then
             echo -e "\e[91mPlease enter the path name plz....\n"
-            if_dir_exist_in_sys
+            if_dir_exist_in_sys "$devicecode"
         else
-            tmp_chk=$(if [ -d $dir_to_copy_path ]; then echo '0'; else echo '1'; fi)
-            if [ "$tmp_chk" == "0" ]
-            then
-                if_dir_exist_in_dev
+            tmp_chk=$(if [ -d "$dir_to_copy_path" ]; then echo '0'; else echo '1'; fi)
+            if [ "$tmp_chk" == "0" ]; then
+                if_dir_exist_in_dev "$devicecode"
                 break
             else
                 echo -e "\e[91mPlease enter the right path name plz....\n"
-                if_dir_exist_in_sys
+                if_dir_exist_in_sys "$devicecode"
             fi
         fi
-        
+
     done
-    
+
 }
 
-function dev_custom_push () {
-    
+function dev_custom_push() {
+
     devicecode=$1
     modelname=$2
-    
+
     echo -e "\e[93m1. \e[92mPush File"
     echo -e "\e[93m2. \e[92mPush Directory"
-    while [ 1 ]
-    do
-        read -p $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
+    while true; do
+        read -rp $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
         case $options in
-            "1") if_file_exist_in_sys; break;;
-            "2") if_dir_exist_in_sys; break;;
-            *) echo -e "\n\e[1;4;91mENTER THE RIGHT OPTION BRO :- (1/2)\n";;
+        "1")
+            if_file_exist_in_sys "$devicecode"
+            break
+            ;;
+        "2")
+            if_dir_exist_in_sys "$devicecode"
+            break
+            ;;
+        *) echo -e "\n\e[1;4;91mENTER THE RIGHT OPTION BRO :- (1/2)\n" ;;
         esac
     done
-    
-    if [ "$file_to_copy" == "0" ]
-    then
+
+    if [ "$file_to_copy" == "0" ]; then
         echo -e "\e[93m"
-        adb -s $devcode push $file_to_copy_path /sdcard/$file_to_copy_path_dev
+        adb -s "$devicecode" push "$file_to_copy_path" "/sdcard/$file_to_copy_path_dev"
     else
         echo -e "\e[93m"
-        adb -s $devcode push $dir_to_copy_path /sdcard/$dir_to_copy_path_dev/
+        adb -s "$devicecode" push "$dir_to_copy_path" "/sdcard/$dir_to_copy_path_dev/"
     fi
-    
+
     echo -e "\n\e[1;92mProcess complete.\n"
-    
+
 }
 
-if [ "$total_dev" ==  "0" ]
-then
+if [ "$total_dev" == "0" ]; then
     echo -e "\e[91;1mNO DEVICE CONNECTED"
 else
-    if [ "$total_dev" == "1" ]
-    then
-        
-        devcode=$(echo ${dev[0]} | awk '{print $1}')
-        modelname=$(echo ${dev[0]} | awk '{print $2}')
-        
+    if [ "$total_dev" == "1" ]; then
+
+        devcode=$(echo "${dev[0]}" | awk '{print $1}')
+        modelname=$(echo "${dev[0]}" | awk '{print $2}')
+
         echo -e "\e[93m1. \e[92m$devcode , \e[93mModel : \e[92m$modelname"
         dev_custom_push "$devcode" "$modelname"
-        
+
     else
-        
+
         echo -e "\e[93mSelect the device to push data :- \e[92m\n"
-        for (( i=0; i<${total_dev}; i++ ));
-        do
-            devcode=$(echo ${dev[$i]} | awk '{print $1}')
-            modelname=$(echo ${dev[$i]} | awk '{print $2}')
+        for ((i = 0; i < total_dev; i++)); do
+            devcode=$(echo "${dev[$i]}" | awk '{print $1}')
+            modelname=$(echo "${dev[$i]}" | awk '{print $2}')
             echo -e "\e[93m1. \e[92m $devcode, \e[93mModel : \e[92m$modelname "
         done
-        
-        while [ 1 ]; do
-            
-            read -p $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
-            [[ $options =~ ^[0-9]+$ ]] || { echo -e "\e[93m\nEnter a valid number"; continue; }
-            if ((options  >= 1 && options <= $total_dev));
-            then
-                
-                devcode=$(echo ${dev[$options-1]} | awk '{print $1}')
-                modelname=$(echo ${dev[$options-1]} | awk '{print $2}')
+
+        while true; do
+
+            read -rp $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
+            [[ $options =~ ^[0-9]+$ ]] || {
+                echo -e "\e[93m\nEnter a valid number"
+                continue
+            }
+            if ((options >= 1 && options <= total_dev)); then
+
+                devcode=$(echo "${dev[$options - 1]}" | awk '{print $1}')
+                modelname=$(echo "${dev[$options - 1]}" | awk '{print $2}')
                 dev_custom_push "$devcode" "$modelname"
-                
+
                 break
-                
+
             else
                 echo -e "\e[93m\nEnter a valid number"
             fi
-            
+
         done
-        
+
     fi
 fi
 

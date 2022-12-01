@@ -6,74 +6,70 @@ total_dev=0
 ## DEVICE ID & MODEL EXTARCT ##
 dev=$(bash modules/HelperFunctions/GetDevices)
 
-if [ "$dev" != "" ];
-then
+if [ "$dev" != "" ]; then
     total_dev=${#dev[@]}
 fi
 
-function dev_whatsapp_pull () {
-    
+function dev_whatsapp_pull() {
+
     devcode=$1
     modelname=$2
-    
+
     echo -e "\n\e[1;93mCopying all the WhatsApp data from device $modelname\n\e[93m"
-    
-    if [ -d $PWD/device-pull/"$modelname"-"$devcode"/ ]
-    then
-        echo -e "\e[92mDirectory $PWD/device-pull/"$modelname"-"$devcode"/ exists. \n"
+
+    if [ -d "$PWD"/device-pull/"$modelname"-"$devcode"/ ]; then
+        echo -e "\e[92mDirectory $PWD/device-pull/""$modelname""-""$devcode""/ exists. \n"
     else
-        tmp_dir=$(echo $PWD/device-pull/$modelname-$devcode)
-        echo $tem_dir
-        mkdir -p $tmp_dir
+        tmp_dir="$PWD/device-pull/$modelname-$devcode"
+        mkdir -p "$tmp_dir"
     fi
     time=$(date +"%T")
-    adb -s $devcode pull /sdcard/WhatsApp/ $PWD/device-pull/$modelname-$devcode/WhatsApp-$time/
+    adb -s "$devcode" pull "/sdcard/WhatsApp/" "$PWD/device-pull/$modelname-$devcode/WhatsApp-$time/"
     echo -e "\n\e[1;92mProcess complete.\n"
-    
+
 }
 
-if [ "$total_dev" ==  "0" ]
-then
+if [ "$total_dev" == "0" ]; then
     echo -e "\e[91;1mNO DEVICE CONNECTED"
 else
-    if [ "$total_dev" == "1" ]
-    then
-        
-        devcode=$(echo ${dev[0]} | awk '{print $1}')
-        modelname=$(echo ${dev[0]} | awk '{print $2}')
-        
+    if [ "$total_dev" == "1" ]; then
+
+        devcode=$(echo "${dev[0]}" | awk '{print $1}')
+        modelname=$(echo "${dev[0]}" | awk '{print $2}')
+
         echo -e "\e[93m1. \e[92m$devcode , \e[93mModel : \e[92m$modelname"
         dev_whatsapp_pull "$devcode" "$modelname"
-        
+
     else
-        
+
         echo -e "\e[93mSelect the device to copy all WhatsApp data :- \e[92m\n"
-        for (( i=0; i<${total_dev}; i++ ));
-        do
-            devcode=$(echo ${dev[$i]} | awk '{print $1}')
-            modelname=$(echo ${dev[$i]} | awk '{print $2}')
+        for ((i = 0; i < total_dev; i++)); do
+            devcode=$(echo "${dev[$i]}" | awk '{print $1}')
+            modelname=$(echo "${dev[$i]}" | awk '{print $2}')
             echo -e "\e[93m1. \e[92m $devcode, \e[93mModel : \e[92m$modelname "
         done
-        
-        while [ 1 ]; do
-            
-            read -p $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
-            [[ $options =~ ^[0-9]+$ ]] || { echo -e "\e[93m\nEnter a valid number"; continue; }
-            if ((options  >= 1 && options <= $total_dev));
-            then
-                
-                devcode=$(echo ${dev[$options-1]} | awk '{print $1}')
-                modelname=$(echo ${dev[$options-1]} | awk '{print $2}')
+
+        while true; do
+
+            read -rp $'\n\e[1;4;91mEnter here\e[0m\e[24;1;97m : ' options
+            [[ $options =~ ^[0-9]+$ ]] || {
+                echo -e "\e[93m\nEnter a valid number"
+                continue
+            }
+            if ((options >= 1 && options <= total_dev)); then
+
+                devcode=$(echo "${dev[$options - 1]}" | awk '{print $1}')
+                modelname=$(echo "${dev[$options - 1]}" | awk '{print $2}')
                 dev_whatsapp_pull "$devcode" "$modelname"
-                
+
                 break
-                
+
             else
                 echo -e "\e[93m\nEnter a valid number"
             fi
-            
+
         done
-        
+
     fi
 fi
 
