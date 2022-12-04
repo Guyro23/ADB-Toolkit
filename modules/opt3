@@ -19,8 +19,8 @@ else
         devcode=$(echo "${dev[0]}" | awk '{print $1}')
         modelname=$(echo "${dev[0]}" | awk '{print $2}')
         echo -e "\e[93m1. \e[92m $devcode, \e[93mModel : \e[92m$modelname"
-        echo -e "\n\e[1;92mRebooting the device $modelname" && adb -s "$devcode" reboot >/dev/null 2>&1 |
-            else
+        echo -e "\n\e[1;92mRebooting the device $modelname" && adb -s "$devcode" reboot >/dev/null 2>&1
+    else
 
         echo -e "\e[93mSelect the device to Reboot  :- \e[92m\n"
         for ((i = 0; i < total_dev; i++)); do
